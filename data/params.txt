@@ -1,0 +1,18 @@
+####################################################
+# HEADER: the file desctibes simulation parameters #
+####################################################
+ 
+=
+num_time_steps 200000000
+width 930
+height 630
+
+delta_x 0.000577
+delta_t 1e-3
+
+tau 0.6
+viscosity 85.06e-6
+
+max_velocity_rendering 0.125
+min_velocity_rendering 0.00000001
+steps_per_report 100

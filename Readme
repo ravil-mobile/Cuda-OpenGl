@@ -1,0 +1,28 @@
+It is a 2D implementation of the Lattice Boltzmann Method in CUDA.
+
+Installation:
+	mkdir build
+	cd ./build
+	cmake ..
+	make
+
+To run an example (from the "build folder"):
+	./lbm -p ../data/params.txt -m ../data/mesh.txt -b ../data/boundary.txt -t ../data/theads_distr.txt
+
+To generate a mesh file, you can use any black & white image. You can use "mesh_generator.py" script
+to convert your image to a mesh. You can find the script in the "utils" folder.
+	Example:
+		cd ./utils
+		python ./mesh_generator.py ./mesh-1.jpg
+		# the script generates "mesh.txt" file which contains the corresponding mesh
+		cp ./mesh.txt ../data/
+
+Please, be sure that you have cuda-8 installed together with the corresponding video driver
+(nvidia-384 or nvidia-390) and "glew" library.	You can refer to the following link: 
+http://glew.sourceforge.net/install.html, to read more about "glew" library.
+
+Tested systems:
+	Ubuntu 16.04
+
+Example:
+	https://www.youtube.com/watch?v=L8s2GIkjgbg&feature=youtu.be

@@ -1,0 +1,12 @@
+##################################################
+# HEADER: the file desctibes boundary conditions #
+##################################################
+ 
+=
+wall_velocity_x 0.00
+wall_velocity_y 0.00
+
+velocity_inflow_x 0.10
+velocity_inflow_y 0.00
+
+density_outflow 1.0
