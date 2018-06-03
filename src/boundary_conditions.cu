@@ -47,7 +47,9 @@ BoundaryConditionsHandler::~BoundaryConditionsHandler() {
 }
 
 void BoundaryConditionsHandler::SetNonSlipBC(std::vector<struct WallBC> elements) {
-    
+    if (dev_boundary_conditions.bc_wall_indices != NULL) {
+        HANDLE_ERROR(cudaFree (dev_boundary_conditions.bc_wall_indices));
+    }
     // concert data from AoS to SoA 
     int size = elements.size();
     int *temp_indices = (int*)calloc(2 * size, sizeof(int));
@@ -75,6 +77,13 @@ void BoundaryConditionsHandler::SetNonSlipBC(std::vector<struct WallBC> elements
 
 void BoundaryConditionsHandler::SetSlipBC(std::vector<struct MovingWallBC> elements) {
    
+    if (dev_boundary_conditions.bc_moving_wall_indices != NULL) {
+        HANDLE_ERROR(cudaFree (dev_boundary_conditions.bc_moving_wall_indices));
+    }
+
+    if (dev_boundary_conditions.bc_moving_wall_data != NULL) {
+        HANDLE_ERROR (cudaFree (dev_boundary_conditions.bc_moving_wall_data));
+    }
     // concert data from AoS to SoA 
     int size = elements.size(); 
     int *temp_indices = (int*)calloc(3 * size, sizeof(int));
@@ -115,6 +124,12 @@ void BoundaryConditionsHandler::SetSlipBC(std::vector<struct MovingWallBC> eleme
 
 void BoundaryConditionsHandler::SetInflowBC(std::vector<struct InflowBC> elements) {
 
+    if (dev_boundary_conditions.bc_inflow_indices != NULL) {
+        HANDLE_ERROR(cudaFree (dev_boundary_conditions.bc_inflow_indices));
+    }
+    if (dev_boundary_conditions.bc_inflow_data != NULL) {
+      HANDLE_ERROR(cudaFree (dev_boundary_conditions.bc_inflow_data));
+    }
     // concert data from AoS to SoA 
     int size = elements.size(); 
     int *temp_indices = (int*)calloc(2 * size, sizeof(int));
@@ -155,6 +170,9 @@ void BoundaryConditionsHandler::SetInflowBC(std::vector<struct InflowBC> element
 
 void BoundaryConditionsHandler::SetOutflowBC(std::vector<struct OutflowBC> elements) {
 
+    if (dev_boundary_conditions.bc_outflow_indices != NULL) {
+        HANDLE_ERROR(cudaFree (dev_boundary_conditions.bc_outflow_indices));
+    }
     // concert data from AoS to SoA 
     int size = elements.size(); 
     int *temp_indices = (int*)calloc(4 * size, sizeof(int));

@@ -3,7 +3,7 @@
 ####################################################
  
 =
-num_time_steps 200000000
+num_time_steps 20000000
 width 930
 height 630
 
@@ -16,3 +16,4 @@ viscosity 85.06e-6
 max_velocity_rendering 0.125
 min_velocity_rendering 0.00000001
 steps_per_report 100
+brush_size 5

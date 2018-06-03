@@ -185,10 +185,6 @@ __global__ void UpdatePopulationFieldDevice(real *velocity,
 
             real dot_product_cu = vector_component_x * local_velocity_x
                                 + vector_component_y * local_velocity_y;
-            /*
-            real dot_product_cu = coords_device[component] * local_velocity_x
-                                + coords_device[num_directions + component] * local_velocity_y;
-            */
         
             real velocity_expansion = (const_one * dot_product_cu)
                                     + (const_two * dot_product_cu * dot_product_cu)
@@ -355,20 +351,16 @@ __global__ void ComputeVelocityMagnitude(real *velocity,
 }
 
 
-__global__ void FloatToRGB( uchar4 *ptr, real* velocity_magnitude, int* flag_field ) {
+__global__ void DrawFluid(uchar4 *ptr,
+                          real* velocity_magnitude,
+                          int* indices,
+                          int size) {
     // map from threadIdx/BlockIdx to pixel position
-    int index = threadIdx.x + blockIdx.x * blockDim.x;
+    int thread_id = threadIdx.x + blockIdx.x * blockDim.x;
     int stride = blockDim.x * gridDim.x;
 
-    for (int i = index; i < parameters_device.num_lattices; i += stride ) {
-        if ( flag_field[index] == WALL ) {
-          ptr[index].x = 0;
-          ptr[index].y = 0;
-          ptr[index].z = 0;
-          ptr[index].w = 255;
-        }
-
-      else {
+    for (int i = thread_id; i < size; i += stride) {
+        int index = indices[thread_id];
         real velocity = velocity_magnitude[index]; 
 
         // max --> red
@@ -396,18 +388,17 @@ __global__ void FloatToRGB( uchar4 *ptr, real* velocity_magnitude, int* flag_fie
         int c_green_one = -1 * (green_slope_one * min_velocity);
         int c_green_two = -1 * (green_slope_two * max_velocity);
 
-        if (velocity <= avg_velocity ) {
+            if (velocity <= avg_velocity) {
 
-          red_hue = 0;
-          blue_hue = blue_slope * velocity + c_blue;
-          green_hue = green_slope_one * velocity + c_green_one;  
-        }
-        else {
-          red_hue = red_slope * velocity + c_red;
-          blue_hue = 0;
-          green_hue = green_slope_two * velocity + c_green_two; 
-        }
-
+                red_hue = 0;
+                blue_hue = blue_slope * velocity + c_blue;
+                green_hue = green_slope_one * velocity + c_green_one;  
+            }
+            else {
+                red_hue = red_slope * velocity + c_red;
+                blue_hue = 0;
+                green_hue = green_slope_two * velocity + c_green_two; 
+            }
 
         red_hue = red_hue <= 255 ? red_hue : 255;
         blue_hue = blue_hue <= 255 ? blue_hue : 255;
@@ -417,6 +408,31 @@ __global__ void FloatToRGB( uchar4 *ptr, real* velocity_magnitude, int* flag_fie
         ptr[index].y = green_hue;
         ptr[index].z = blue_hue;
         ptr[index].w = 255;
-      }
     }
+}
+
+__global__ void DrawObstacles(uchar4 *ptr, int* indices, int size) {
+
+    int thread_id = threadIdx.x + blockIdx.x * blockDim.x;
+
+    while (thread_id < size) {
+        int index = indices[thread_id];
+        ptr[index].x = 0;
+        ptr[index].y = 0;
+        ptr[index].z = 0;
+        ptr[index].w = 255;
+
+        thread_id += blockDim.x * gridDim.x;
+    }
+}
+
+__global__ void PrintMaxMinDensity(real *density,
+                                   int max_index,
+                                   int min_index,
+                                   int time) {
+    printf("time step: %d; max density: %4.6f; min density: %4.6f\n",
+            time, density[max_index], density[min_index]);
+}
+
+__global__ void SynchStreams() {
 }

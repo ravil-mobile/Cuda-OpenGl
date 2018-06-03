@@ -63,5 +63,14 @@ __global__ void TreatOutflowBC(int *indices,
 __global__ void ComputeVelocityMagnitude(real *velocity,
                                          real *velocity_magnitude);
 
-__global__ void FloatToRGB (uchar4 *ptr, real* velocity_magnitude, int* flag_field);
+__global__ void DrawFluid(uchar4 *ptr, real* velocity_magnitude, int* indices, int size);
+
+__global__ void DrawObstacles(uchar4 *ptr, int* indices, int size);
+
+__global__ void PrintMaxMinDensity(real *density,
+                                   int max_index,
+                                   int min_index,
+                                   int time);
+
+__global__ void SynchStreams();
 #endif  // SEQUENTIAL_LBM_SRC_HEADERS_KERNELS_H_

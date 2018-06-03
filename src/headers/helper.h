@@ -27,6 +27,16 @@ struct CudaResourceDistr {
     int float_to_rgb;
 };
 
+struct Point {
+    int x;
+    int y;
+
+    Point (int first, int second) {
+      x = first;
+      y = second; 
+    }
+};
+
 int parse_opt(int key, char *arg, struct argp_state *state);
 
 bool isSpace (const std::string& str);
@@ -52,6 +62,12 @@ void ComputeBlcoksDistr(struct CudaResourceDistr &blocks,
                         const struct CudaResourceDistr &threads,
                         const struct SimulationParametes &parameters,
                         const struct BoundaryConditions *boudnaries);
+
+void DrawCircle(int x,
+                int y,
+                int marker,
+                int* flag_field,
+                const struct SimulationParametes &parameters);
 
 template<typename T>
 void PrintArray(T *array, int size) {

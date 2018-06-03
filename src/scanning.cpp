@@ -3,9 +3,11 @@
 #include "headers/parameters.h"
 #include "headers/scanning.h"
 #include "headers/boundary_conditions.h"
+#include "headers/domain.h"
 #include "headers/helper.h"
 
 void ScanFlagField(int *flag_field,
+                   DomainHandler &domain_handler,
                    BoundaryConditionsHandler &bc_handler,
                    const struct SimulationParametes &parameters,
                    const struct Constants &constants,
@@ -13,6 +15,8 @@ void ScanFlagField(int *flag_field,
     int num_directions = parameters.discretization;
     int width = parameters.width;
 
+    std::vector<int> FluidIndices;
+    std::vector<int> SolidIndices;
     std::vector<struct WallBC> wall_elements;
     std::vector<struct MovingWallBC> mov_wall_elements;
     std::vector<struct InflowBC> inflow_elements;
@@ -23,6 +27,8 @@ void ScanFlagField(int *flag_field,
             int scalar_self_index = GetIndex(i, j, width);
 
             if (flag_field[scalar_self_index] == FLUID) {
+                FluidIndices.push_back(scalar_self_index);
+
                 for (int component = 0; component < num_directions; ++component) {
                     int ii = coords[component];
                     int jj = coords[component + num_directions];
@@ -83,6 +89,9 @@ void ScanFlagField(int *flag_field,
                     }
                 }
             }
+            else {
+                SolidIndices.push_back(scalar_self_index); 
+            }
         }
     }
 
@@ -90,4 +99,6 @@ void ScanFlagField(int *flag_field,
     bc_handler.SetSlipBC(mov_wall_elements);
     bc_handler.SetInflowBC(inflow_elements);
     bc_handler.SetOutflowBC(outflow_elements);
+    domain_handler.AllocateFluidElementIndices(FluidIndices);
+    domain_handler.AllocateSolidElementIndices(SolidIndices);
 }

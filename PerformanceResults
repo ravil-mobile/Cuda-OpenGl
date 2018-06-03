@@ -1,0 +1,160 @@
+RUN WITH 200 CYCLES
+***************************************************************************
+<double>
+number of gpu devices detected: 2
+
+ --- General Information for device 0 ---
+	 name: GeForce GTX 980 Ti
+	 compute capability 5.2
+	 warp size: 32
+	 max num. threads per block: 1024
+	 max num. registers per block: 65536
+	 size of constant memory: 65536
+	 The number of blocks allowed along x dimension of a grid: 2147483647
+
+
+ --- General Information for device 1 ---
+	 name: GeForce GTX 980 Ti
+	 compute capability 5.2
+	 warp size: 32
+	 max num. threads per block: 1024
+	 max num. registers per block: 65536
+	 size of constant memory: 65536
+	 The number of blocks allowed along x dimension of a grid: 2147483647
+
+
+
+ --- GeForce GTX 980 Ti: device has been chosen --- 
+ --- Compute capability: 5.2 --- 
+
+
+MLUPS: 292.249833
+
+<float>
+ --- General Information for device 0 ---
+	 name: GeForce GTX 980 Ti
+	 compute capability 5.2
+	 warp size: 32
+	 max num. threads per block: 1024
+	 max num. registers per block: 65536
+	 size of constant memory: 65536
+	 The number of blocks allowed along x dimension of a grid: 2147483647
+
+
+ --- General Information for device 1 ---
+	 name: GeForce GTX 980 Ti
+	 compute capability 5.2
+	 warp size: 32
+	 max num. threads per block: 1024
+	 max num. registers per block: 65536
+	 size of constant memory: 65536
+	 The number of blocks allowed along x dimension of a grid: 2147483647
+
+
+
+ --- GeForce GTX 980 Ti: device has been chosen --- 
+ --- Compute capability: 5.2 --- 
+
+
+MLUPS: 650.629406
+***************************************************************************
+<double>
+number of gpu devices detected: 2
+
+ --- General Information for device 0 ---
+	 name: Tesla M2090
+	 compute capability 2.0
+	 warp size: 32
+	 max num. threads per block: 1024
+	 max num. registers per block: 32768
+	 size of constant memory: 65536
+	 The number of blocks allowed along x dimension of a grid: 65535
+
+
+ --- General Information for device 1 ---
+	 name: Tesla M2090
+	 compute capability 2.0
+	 warp size: 32
+	 max num. threads per block: 1024
+	 max num. registers per block: 32768
+	 size of constant memory: 65536
+	 The number of blocks allowed along x dimension of a grid: 65535
+
+
+
+ --- Tesla M2090: device has been chosen --- 
+ --- Compute capability: 2.0 --- 
+
+
+MLUPS: 197.946030
+
+<float>
+number of gpu devices detected: 2
+
+ --- General Information for device 0 ---
+	 name: Tesla M2090
+	 compute capability 2.0
+	 warp size: 32
+	 max num. threads per block: 1024
+	 max num. registers per block: 32768
+	 size of constant memory: 65536
+	 The number of blocks allowed along x dimension of a grid: 65535
+
+
+ --- General Information for device 1 ---
+	 name: Tesla M2090
+	 compute capability 2.0
+	 warp size: 32
+	 max num. threads per block: 1024
+	 max num. registers per block: 32768
+	 size of constant memory: 65536
+	 The number of blocks allowed along x dimension of a grid: 65535
+
+
+
+ --- Tesla M2090: device has been chosen --- 
+ --- Compute capability: 2.0 --- 
+
+
+MLUPS: 382.165580
+***************************************************************************
+<double>
+number of gpu devices detected: 1
+
+ --- General Information for device 0 ---
+	 name: GeForce 610M
+	 compute capability 2.1
+	 warp size: 32
+	 max num. threads per block: 1024
+	 max num. registers per block: 32768
+	 size of constant memory: 65536
+	 The number of blocks allowed along x dimension of a grid: 65535
+
+
+
+ --- GeForce 610M: device has been chosen --- 
+ --- Compute capability: 2.1 --- 
+
+
+MLUPS: 20.357470
+
+
+<float>
+number of gpu devices detected: 1
+
+ --- General Information for device 0 ---
+	 name: GeForce 610M
+	 compute capability 2.1
+	 warp size: 32
+	 max num. threads per block: 1024
+	 max num. registers per block: 32768
+	 size of constant memory: 65536
+	 The number of blocks allowed along x dimension of a grid: 65535
+
+
+
+ --- GeForce 610M: device has been chosen --- 
+ --- Compute capability: 2.1 --- 
+
+
+MLUPS: 42.896546

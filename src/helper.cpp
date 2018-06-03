@@ -9,7 +9,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <argp.h>
-
+#include <sstream>
 #include "headers/parameters.h"
 #include "headers/helper.h"
 #include "headers/boundary_conditions.h"
@@ -162,6 +162,7 @@ void ReadParameterFile(const char* parameter_file,
     intMap["width"] = DEFAULT_VALUE;
     intMap["height"] = DEFAULT_VALUE;
     intMap["steps_per_report"] = DEFAULT_VALUE;
+    intMap["brush_size"] = DEFAULT_VALUE;
 
     doubleMap["delta_x"] = DEFAULT_VALUE;
     doubleMap["delta_t"] = DEFAULT_VALUE;
@@ -211,6 +212,7 @@ void ReadParameterFile(const char* parameter_file,
     parameters.width = intMap["width"];
     parameters.height = intMap["height"];
     parameters.steps_per_report = intMap["steps_per_report"];
+    parameters.brush_size = intMap["brush_size"];
 
     parameters.delta_x = doubleMap["delta_x"];
     parameters.delta_t = doubleMap["delta_t"];
@@ -220,7 +222,6 @@ void ReadParameterFile(const char* parameter_file,
     parameters.min_velocity_rendering = doubleMap["min_velocity_rendering"];
 
     // Initialize the rest of the struct
-
     parameters.simulation_time = 1.0;
     parameters.dimension = 2;
     parameters.discretization = 9;
@@ -533,4 +534,24 @@ void ComputeBlcoksDistr(struct CudaResourceDistr &blocks,
                                            parameters.num_lattices);
 }
 
+void DrawCircle(int x,
+                int y,
+                int marker,
+                int* flag_field,
+                const struct SimulationParametes &parameters) {
+    int width = parameters.width;
+    int radius = parameters.brush_size;
 
+    int center[] = {x, y};
+    for (int j = (center[1] - radius); j < (center[1] + radius); ++j) {
+        for (int i = (center[0] - radius); i < (center[0] + radius); ++i) {
+            real delta_x = real(center[0] - i);
+            real delta_y = real(center[1] - j);
+            real distance = sqrt(delta_x * delta_x + delta_y * delta_y);
+            if (real(radius) > distance) {
+                int index = GetIndex(i, j, width);
+                flag_field[index] = marker;
+            }
+        }
+    }
+}

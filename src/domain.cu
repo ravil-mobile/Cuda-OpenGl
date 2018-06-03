@@ -1,4 +1,6 @@
+#include <stdio.h>
 #include <algorithm>
+#include <vector>
 
 #include "headers/domain.h"
 #include "headers/parameters.h"
@@ -6,12 +8,15 @@
 #include "headers/helper.h"
 
 DomainHandler::DomainHandler() {
-    dev_domain.dev_flag_field = 0; 
-    dev_domain.dev_density = 0;
-    dev_domain.dev_velocity_magnitude = 0;
-    dev_domain.dev_velocity = 0;
-    dev_domain.dev_population = 0;
-    dev_domain.dev_swap_buffer = 0;
+    dev_domain.dev_flag_field = NULL;
+    dev_domain.dev_density = NULL;
+    dev_domain.dev_velocity_magnitude = NULL;
+    dev_domain.dev_velocity = NULL;
+    dev_domain.dev_population = NULL;
+    dev_domain.dev_swap_buffer = NULL;
+
+    dev_domain.dev_fluid_indices = NULL;
+    dev_domain.dev_solid_indices = NULL;
 }
 
 DomainHandler::~DomainHandler() {
@@ -38,6 +43,14 @@ DomainHandler::~DomainHandler() {
     if (dev_domain.dev_swap_buffer != NULL) {
         HANDLE_ERROR(cudaFree(dev_domain.dev_swap_buffer));
     }
+
+    if (dev_domain.dev_fluid_indices != NULL) {
+        HANDLE_ERROR(cudaFree(dev_domain.dev_fluid_indices)); 
+    }
+
+    if (dev_domain.dev_solid_indices != NULL) {
+        HANDLE_ERROR(cudaFree(dev_domain.dev_solid_indices));
+    }
 }
 
 void DomainHandler::InitDomainOnDevice(SimulationParametes &parameters,
@@ -63,7 +76,7 @@ void DomainHandler::InitDomainOnDevice(SimulationParametes &parameters,
 
     double init_value = 1.0;
 
-    const int num_threads = 192;
+    const int num_threads = 128;
     int num_blocks = ComputeNumBlocks(num_threads, size);
     InitArrayDevice<<<num_blocks, num_threads>>>(dev_domain.dev_density,
                                                  init_value,
@@ -94,8 +107,42 @@ void DomainHandler::InitDomainOnDevice(SimulationParametes &parameters,
     HANDLE_ERROR(cudaDeviceSynchronize());
 }
 
+void DomainHandler::AllocateFluidElementIndices(std::vector<int> indices) {
+    if (dev_domain.dev_fluid_indices != NULL) {
+        HANDLE_ERROR( cudaFree (dev_domain.dev_fluid_indices));
+    }
+    dev_domain.num_fluid_elements = indices.size();
+    HANDLE_ERROR(cudaMalloc(&(dev_domain.dev_fluid_indices), indices.size() * sizeof(int)));
+    HANDLE_ERROR(cudaMemcpy(dev_domain.dev_fluid_indices,
+                            indices.data(),
+                            indices.size() * sizeof(int),
+                            cudaMemcpyHostToDevice));
+}
+
+
+void DomainHandler::AllocateSolidElementIndices(std::vector<int> indices) {
+    if (dev_domain.dev_solid_indices != NULL) {
+        HANDLE_ERROR( cudaFree (dev_domain.dev_solid_indices));
+    }
+    dev_domain.num_solid_elements = indices.size();
+    HANDLE_ERROR(cudaMalloc(&(dev_domain.dev_solid_indices), indices.size() * sizeof(int)));
+    HANDLE_ERROR(cudaMemcpy(dev_domain.dev_solid_indices,
+                            indices.data(),
+                            indices.size() * sizeof(int),
+                            cudaMemcpyHostToDevice));
+}
+
+void DomainHandler::UpdateFlagField (int* flag_field, unsigned int size) {
+
+    HANDLE_ERROR( cudaMemcpy(dev_domain.dev_flag_field,
+                             flag_field,
+                             size * sizeof(int),
+                             cudaMemcpyHostToDevice ) );
+}
+
 void DomainHandler::SwapPopulationFields() {
-    std::swap(dev_domain.dev_population, dev_domain.dev_swap_buffer);
+    std::swap(dev_domain.dev_population,
+              dev_domain.dev_swap_buffer);
 }
 
 const Domain * DomainHandler::GetDeviceData() {

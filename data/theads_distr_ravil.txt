@@ -1,0 +1,17 @@
+############################################################################
+# HEADER: the file desctibes theads distriburion per block for each kernel #
+############################################################################
+ 
+=
+stream_device                   192
+update_density_field_device     192
+update_velocity_field_device    192
+update_population_field_device  192
+
+treat_non_slip_bc               192
+treat_slip_bc                   192
+treat_inflow_bc                 192
+treat_outflow_bc                192
+
+compute_velocity_magnitude      192
+float_to_rgb                    192
